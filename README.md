@@ -17,7 +17,7 @@ Arguments:
 ```
   path/to/image   local file, or remote url
   --width         number of terminal columns, or a percentage
-  --alpha         either `threshold` | `whiten` | `blacken` 
+  --alpha         transparency mode: either `threshold` | `whiten` | `blacken`
 ```
 
 The code will fallback to [8-bit color palette](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit) if [true color](https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit) is not supported by your terminal.

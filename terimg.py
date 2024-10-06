@@ -84,7 +84,7 @@ def print_help_and_exit():
   print()
   print(f'  path/to/image   local file, or remote url')
   print(f'  --width         number of terminal columns, or a percentage')
-  print(f'  --alpha         transparency mode: `threshold` |`whiten` |`blacken` ')
+  print(f'  --alpha         transparency mode: `threshold` | `whiten` | `blacken`')
   print()
   exit()
 
