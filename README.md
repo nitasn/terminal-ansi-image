@@ -2,7 +2,7 @@
 
 Print images inside your terminal.
 
-![image](assets/screenshot-chrome-logo.png)
+![image](assets/screenshot-chrome-logo-60.png)
 
 You can also pass a URL:
 ![image](assets/screenshot-minecraft-tool.png)
