@@ -87,14 +87,14 @@ def get_desired_width(kv_args) -> int:
   return terminal_width
 
 
-def ansii_color(r, g, b) -> str:
+def ansi_color(r, g, b) -> str:
   return f'\033[48;2;{r};{g};{b}m'
 
 
 def print_image(pixels: np.ndarray) -> None:
   print()
   for row in pixels:
-    print(''.join(ansii_color(r, g, b) + '  ' for r, g, b in row) + '\033[0m')
+    print(''.join(ansi_color(r, g, b) + '  ' for r, g, b in row) + '\033[0m')
   print()
 
 
