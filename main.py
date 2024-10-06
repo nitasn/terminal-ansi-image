@@ -1,20 +1,19 @@
 from PIL import Image
 from sys import argv
-import numpy as np
 import shutil
 
 import urllib.request
 from io import BytesIO
 
 
-def fetch_image_from_url(url) -> Image:
+def fetch_image_from_url(url) -> Image.Image:
   with urllib.request.urlopen(url) as response:
     buf = response.read()
     img = Image.open(BytesIO(buf))
     return img
 
 
-def load_image(path) -> Image:
+def load_image(path) -> Image.Image:
   if path.startswith('http://') or path.startswith('https://'):
     img = fetch_image_from_url(path)
   else:
@@ -22,7 +21,7 @@ def load_image(path) -> Image:
   return img.convert('RGB')
 
 
-def resize(img, desired_width) -> Image:
+def resize(img, desired_width) -> Image.Image:
   width, height = img.size
   
   new_width = desired_width // 2
@@ -31,7 +30,21 @@ def resize(img, desired_width) -> Image:
   return img.resize((new_width, new_height))
 
 
+def to_pixels_array(img: Image.Image) -> list[list[tuple[int, int, int]]]:
+  width, height = img.size
+  pixels = list(img.getdata())
+  return [pixels[i * width : (i + 1) * width] for i in range(height)]
+
+
 def parse_argv() -> tuple[list[str], dict[str, str]]:
+  '''
+  for instance, if you ran `python3 main.py path/to/image --width 80`, 
+  the function will return:
+  ```
+    regular_args = ['path/to/image'],
+    kv_args = { '--width': '80' }
+  ```
+  '''
   regular_args = []
   kv_args = {}
 
@@ -91,7 +104,7 @@ def ansi_color(r, g, b) -> str:
   return f'\033[48;2;{r};{g};{b}m'
 
 
-def print_image(pixels: np.ndarray) -> None:
+def print_image(pixels: list[list[tuple[int, int, int]]]) -> None:
   print()
   for row in pixels:
     chars = (ansi_color(*rgb) + '  ' for rgb in row)
@@ -104,7 +117,7 @@ def main() -> None:
   desired_width = get_desired_width(kv_args)
   img = load_image(image_path)
   img = resize(img, desired_width)
-  pixels = np.array(img)
+  pixels = to_pixels_array(img)
   print_image(pixels)
 
 
