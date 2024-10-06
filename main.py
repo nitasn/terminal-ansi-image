@@ -1,13 +1,14 @@
 from PIL import Image
+
+from shutil import get_terminal_size
 from sys import argv
-import shutil
 
 import urllib.request
 from io import BytesIO
 
-import os
+from os import getenv
 
-supports_true_color = os.getenv('COLORTERM') == 'truecolor'
+supports_true_color = getenv('COLORTERM') == 'truecolor'
 
 
 def fetch_image_from_url(url) -> Image.Image:
@@ -95,7 +96,7 @@ def get_desired_width(kv_args) -> int:
   if width_arg and not width_arg.endswith('%'):
     return int(width_arg)
   
-  terminal_width, _ = shutil.get_terminal_size()
+  terminal_width, _ = get_terminal_size()
   
   if width_arg and width_arg.endswith('%'):
     fraction = int(width_arg[:-1]) / 100
