@@ -5,6 +5,10 @@ import shutil
 import urllib.request
 from io import BytesIO
 
+import os
+
+supports_true_color = os.getenv('COLORTERM') == 'truecolor'
+
 
 def fetch_image_from_url(url) -> Image.Image:
   with urllib.request.urlopen(url) as response:
@@ -101,7 +105,17 @@ def get_desired_width(kv_args) -> int:
 
 
 def ansi_color(r, g, b) -> str:
-  return f'\033[48;2;{r};{g};{b}m'
+  if supports_true_color:
+    return f'\033[48;2;{r};{g};{b}m'
+  else:
+    # fallback to older ansi 256-color palette
+    # colors 16 to 231 represent a 6×6×6 color cube, and colors 232 to 255 are grayscale shades.
+    if r == g == b:
+      color_index = 232 + round(r / 255 * 23)
+    else:
+      r6, g6, b6 = round(r / 255 * 5), round(g / 255 * 5), round(b / 255 * 5)
+      color_index = 16 + (36 * r6) + (6 * g6) + b6
+    return f'\033[48;5;{color_index}m'
 
 
 def print_image(pixels: list[list[tuple[int, int, int]]]) -> None:
