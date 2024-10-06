@@ -11,14 +11,14 @@ from os import getenv
 supports_true_color = getenv('COLORTERM') == 'truecolor'
 
 
-def fetch_image_from_url(url) -> Image.Image:
+def fetch_image_from_url(url: str) -> Image.Image:
   with urllib.request.urlopen(url) as response:
     buf = response.read()
     img = Image.open(BytesIO(buf))
     return img
 
 
-def load_image(path) -> Image.Image:
+def load_image(path: str) -> Image.Image:
   if path.startswith('http://') or path.startswith('https://'):
     img = fetch_image_from_url(path)
   else:
@@ -26,7 +26,7 @@ def load_image(path) -> Image.Image:
   return img.convert('RGBA')
 
 
-def resize(img, desired_width) -> Image.Image:
+def resize(img: Image.Image, desired_width: int) -> Image.Image:
   width, height = img.size
   
   new_width = desired_width // 2
@@ -90,7 +90,7 @@ def assert_cmd_args() -> tuple[str, dict[str, str]]:
   return img_path, kv_args
 
 
-def get_desired_width(kv_args) -> int:
+def get_desired_width(kv_args: dict[str, str]) -> int:
   width_arg = kv_args.get('--width', '')
   
   if width_arg and not width_arg.endswith('%'):
