@@ -94,7 +94,8 @@ def ansi_color(r, g, b) -> str:
 def print_image(pixels: np.ndarray) -> None:
   print()
   for row in pixels:
-    print(''.join(ansi_color(r, g, b) + '  ' for r, g, b in row) + '\033[0m')
+    chars = (ansi_color(*rgb) + '  ' for rgb in row)
+    print(''.join(chars) + '\033[0m')
   print()
 
 
