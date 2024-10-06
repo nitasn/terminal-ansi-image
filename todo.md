@@ -1,0 +1,1 @@
+1. preserve transparency (if a pixel is completely transparent, just print regular spaces)
