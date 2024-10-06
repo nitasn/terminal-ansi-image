@@ -23,7 +23,7 @@ def load_image(path) -> Image.Image:
     img = fetch_image_from_url(path)
   else:
     img = Image.open(path)
-  return img.convert('RGB')
+  return img.convert('RGBA')
 
 
 def resize(img, desired_width) -> Image.Image:
@@ -105,24 +105,27 @@ def get_desired_width(kv_args) -> int:
   return terminal_width
 
 
-def ansi_color(r, g, b) -> str:
+def ansi_color(r, g, b, alpha) -> str:
+  if alpha < 32:
+    return '\033[0m'
+  
   if supports_true_color:
     return f'\033[48;2;{r};{g};{b}m'
+  
+  # fallback to older ansi 256-color palette
+  # colors 16 to 231 represent a 6×6×6 color cube, and colors 232 to 255 are grayscale shades.
+  if r == g == b:
+    color_index = 232 + round(r / 255 * 23)
   else:
-    # fallback to older ansi 256-color palette
-    # colors 16 to 231 represent a 6×6×6 color cube, and colors 232 to 255 are grayscale shades.
-    if r == g == b:
-      color_index = 232 + round(r / 255 * 23)
-    else:
-      r6, g6, b6 = round(r / 255 * 5), round(g / 255 * 5), round(b / 255 * 5)
-      color_index = 16 + (36 * r6) + (6 * g6) + b6
-    return f'\033[48;5;{color_index}m'
+    r6, g6, b6 = round(r / 255 * 5), round(g / 255 * 5), round(b / 255 * 5)
+    color_index = 16 + (36 * r6) + (6 * g6) + b6
+  return f'\033[48;5;{color_index}m'
 
 
 def print_image(pixels: list[list[tuple[int, int, int]]]) -> None:
   print()
   for row in pixels:
-    chars = (ansi_color(*rgb) + '  ' for rgb in row)
+    chars = (ansi_color(*rgba) + '  ' for rgba in row)
     print(''.join(chars) + '\033[0m')
   print()
 
